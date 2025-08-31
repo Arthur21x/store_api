@@ -60,3 +60,16 @@ async def test_usecases_delete_should_not_found():
         err.value.message
         == "Product not found with filter: 1e4f214e-85f7-461a-89d0-a751a32e3bb9"
     )
+
+async def get_products_filtered(price_min=None, price_max=None):
+    query = {}
+    if price_min is not None:
+        query["price"] = {"$gt": price_min}
+    if price_max is not None:
+        if "price" in query:
+            query["price"]["$lt"] = price_max
+        else:
+            query["price"] = {"$lt": price_max}
+    return await db.products.find(query).to_list(100)
+
+

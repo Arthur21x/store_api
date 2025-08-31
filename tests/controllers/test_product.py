@@ -100,3 +100,9 @@ async def test_controller_delete_should_return_not_found(client, products_url):
     assert response.json() == {
         "detail": "Product not found with filter: 4fd7cd35-a3a0-4c1f-a78d-d24aa81e7dca"
     }
+
+@pytest.mark.asyncio
+async def test_create_product_with_invalid_price(client: AsyncClient):
+    response = await client.post("/products", json={"name": "Produto", "price": -10})
+    assert response.status_code == 422
+
